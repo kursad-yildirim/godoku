@@ -1,24 +1,18 @@
 package gdk
 
-const gdkBoundary = 3
+const gdkDimension = 3
+const gdkArraySize = 9
 
-var valueArray = [9]int32{1, 2, 3, 4, 5, 6, 7, 8, 9}
+var valueArray = [gdkArraySize]int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 
-var emptyValue int32 = 0
+var emptyValue int = 0
 
 type gdkCellType struct {
-	value         int32
-	possibilities [9]int32
-	excluded      [9]int32
-	decided       bool
-}
-
-type gdkSubMatrixType struct {
-	gdkSubMatrix [gdkBoundary][gdkBoundary]gdkCellType
+	value int
 }
 
 type gdkMatrixType struct {
-	gdkMatrix [gdkBoundary][gdkBoundary]gdkSubMatrixType
+	gdkMatrix [gdkArraySize][gdkArraySize]gdkCellType
 }
 
 var Gdkm gdkMatrixType
