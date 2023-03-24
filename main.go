@@ -8,4 +8,5 @@ func main() {
 	gdk.Gdkm.Empty()
 	gdk.Gdkm.FillGrid()
 	gdk.Gdkm.Print()
+	gdk.Gdkm.PrintSubMatrix(0, 0)
 }

@@ -38,7 +38,15 @@ func (gdkm *gdkMatrixType) Print() {
 		}
 		fmt.Println("---------------------------------------")
 	}
-	//fmt.Println("=======================================")
+}
+
+func (gdkm *gdkMatrixType) PrintSubMatrix(subI, subJ int) {
+	for i := range gdkm.gdkMatrix[subI][subJ].gdkSubMatrix {
+		for j := range gdkm.gdkMatrix[subI][subJ].gdkSubMatrix[i] {
+			fmt.Print(gdkm.gdkMatrix[subI][subJ].gdkSubMatrix[i][j].value)
+		}
+		fmt.Println()
+	}
 }
 
 func genRandom(truncatedValueArray []int32) (cellRandom int32) {
@@ -50,21 +58,12 @@ func genRandom(truncatedValueArray []int32) (cellRandom int32) {
 
 // print uzerinden submatrix indexlerini duzelt
 func (gdkm *gdkMatrixType) FillGrid() {
-	var cellValue int32 = 0
 	var truncatedValueArray []int32 = valueArray[:]
 	for iFull, rowFull := range gdkm.gdkMatrix {
 		for jFull := range rowFull {
 			for iSub, rowSub := range gdkm.gdkMatrix[iFull][jFull].gdkSubMatrix {
 				for jSub := range rowSub {
-					numberFound := false
-					for (len(truncatedValueArray) > 1) && (!numberFound) {
-						cellValue = genRandom(truncatedValueArray)
-						numberFound = gdkm.CheckSubMatrix(iFull, jFull, cellValue)
-						fmt.Println(cellValue, numberFound)
-						truncatedValueArray = truncatedValueArray[:len(truncatedValueArray)-1]
-						truncatedValueArray = truncateValueArray(cellValue, truncatedValueArray)
-					}
-					gdkm.gdkMatrix[iFull][jFull].gdkSubMatrix[iSub][jSub].value = cellValue
+					gdkm.gdkMatrix[iFull][jFull].gdkSubMatrix[iSub][jSub].value = genRandom(truncatedValueArray)
 				}
 			}
 		}
@@ -80,18 +79,5 @@ func (gdkm *gdkMatrixType) CheckSubMatrix(subI, subJ int, cellValue int32) (numb
 			}
 		}
 	}
-	return
-}
-
-func truncateValueArray(takeOut int32, valueArray []int32) (shortValueArray []int32) {
-	//	fmt.Println(valueArray)
-	//	fmt.Println(takeOut)
-	for _, num := range valueArray {
-		if num != takeOut {
-			shortValueArray = append(shortValueArray, num)
-			//		fmt.Println(shortValueArray)
-		}
-	}
-
 	return
 }
