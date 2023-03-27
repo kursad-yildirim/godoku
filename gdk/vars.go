@@ -1,14 +1,19 @@
 package gdk
 
-const gdkDimension = 3
-const gdkArraySize = 9
+const gdkDimension = 4
+const gdkArraySize = 16
+const gdkNumCount = 256
+const displayCount = 111
 
-var valueArray = []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+var valueArray []int
+var indexArray []int
+var indexDispArray []int
 
 var emptyValue int = 0
 
 type gdkCellType struct {
-	value int
+	value   int
+	display bool
 }
 
 type gdkMatrixType struct {

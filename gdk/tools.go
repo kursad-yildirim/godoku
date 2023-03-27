@@ -1,31 +1,8 @@
 package gdk
 
 import (
-	"fmt"
 	"math/rand"
 )
-
-func (gdkm *gdkMatrixType) Empty() {
-	for i, row := range gdkm.gdkMatrix {
-		for j := range row {
-			gdkm.gdkMatrix[i][j].value = emptyValue
-		}
-	}
-}
-
-func (gdkm *gdkMatrixType) Print() {
-	fmt.Print("\n===========================\n")
-	for i, row := range gdkm.gdkMatrix {
-		fmt.Println()
-		for j := range row {
-			fmt.Print(" ")
-			fmt.Print(gdkm.gdkMatrix[i][j].value)
-			fmt.Print(" ")
-		}
-		fmt.Println()
-	}
-	fmt.Print("===========================\n\n")
-}
 
 func genRandom(values []int) (cellRandom int) {
 	cellRandom = values[rand.Intn(len(values))]
@@ -33,44 +10,27 @@ func genRandom(values []int) (cellRandom int) {
 	return
 }
 
-func (gdkm *gdkMatrixType) FillGrid() {
-	cellValue := -1
-	for i, row := range gdkm.gdkMatrix {
-		valueArray = fillValueArray()
-		for j := range row {
-			//	getColumnAsArray(j, *gdkm)
-			if len(valueArray) == 1 {
-				cellValue = valueArray[0]
-			} else {
-				cellValue = genRandom(valueArray)
-				//				fmt.Println(valueArray)
-				//				fmt.Println(cellValue)
-				valueArray = truncateArray(cellValue, valueArray)
-				//				fmt.Println(valueArray)
-
-			}
-			gdkm.gdkMatrix[i][j].value = cellValue
-		}
+func removeCurrentRowElements(i, j int, valueArray *[]int, gdkm *gdkMatrixType) {
+	for subJ := 0; subJ < j; subJ++ {
+		*valueArray = truncateArray(gdkm.gdkMatrix[i][subJ].value, *valueArray)
 	}
 }
 
-/*func arrayContains(gdkArray [gdkArraySize]gdkCellType, num int) (numExists bool) {
-	numExists = false
-	for j := range gdkArray {
-		if gdkArray[j].value == num {
-			numExists = true
-		}
+func removeCurrentColumnElements(i, j int, valueArray *[]int, gdkm *gdkMatrixType) {
+	for subI := 0; subI < i; subI++ {
+		*valueArray = truncateArray(gdkm.gdkMatrix[subI][j].value, *valueArray)
 	}
-
-	return
 }
 
-func getColumnAsArray(j int, gdkm gdkMatrixType) (gdkArray [gdkArraySize]gdkCellType) {
-	for i := range gdkm.gdkMatrix[j] {
-		gdkArray[i] = gdkm.gdkMatrix[i][j]
+func removeSubMatrixElements(i, j int, valueArray *[]int, gdkm *gdkMatrixType) {
+	matrixI := i / gdkDimension
+	matrixJ := j / gdkDimension
+	for i := 0; i < gdkDimension; i++ {
+		for j := 0; j < gdkDimension; j++ {
+			*valueArray = truncateArray(gdkm.gdkMatrix[matrixI*gdkDimension+i][matrixJ*gdkDimension+j].value, *valueArray)
+		}
 	}
-	return
-}*/
+}
 
 func truncateArray(takeOut int, valueArray []int) (truncatedValueArray []int) {
 	for i := range valueArray {
@@ -82,9 +42,13 @@ func truncateArray(takeOut int, valueArray []int) (truncatedValueArray []int) {
 	return
 }
 
-func fillValueArray() (valueArray []int) {
-	for i := 0; i < gdkArraySize; i++ {
-		valueArray = append(valueArray, i+1)
+func fillArray(s int, isIndex bool) (valueArray []int) {
+	for i := 0; i < s; i++ {
+		if isIndex {
+			valueArray = append(valueArray, i)
+		} else {
+			valueArray = append(valueArray, i+1)
+		}
 	}
 
 	return

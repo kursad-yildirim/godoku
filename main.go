@@ -6,6 +6,8 @@ import (
 
 func main() {
 	gdk.Gdkm.Empty()
-	gdk.Gdkm.FillGrid()
-	gdk.Gdkm.Print()
+	for !gdk.Gdkm.FillGrid() {
+	}
+	gdk.Gdkm.Mask()
+	gdk.Gdkm.Print(true)
 }
