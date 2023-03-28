@@ -1,9 +1,9 @@
 package gdk
 
-const gdkDimension = 4
-const gdkArraySize = 16
-const gdkNumCount = 256
-const displayCount = 111
+const gdkDimension = 3
+const gdkArraySize = 9
+const gdkNumCount = 81
+const displayCount = 35
 
 var valueArray []int
 var indexArray []int
