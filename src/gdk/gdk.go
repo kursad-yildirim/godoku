@@ -66,19 +66,25 @@ func (gdkm *gdkMatrixType) Print(masked bool) {
 			}
 			fmt.Print(" ")
 		}
-		fmt.Print("\n")
+		fmt.Print("")
 	}
 	fmt.Print("\n\n")
 }
 
 func (gdkm *gdkMatrixType) Mask() {
-	indexArray = fillArray(gridNumTotal, true)
 	i, j := 0, 0
-	for d := 0; d < displayCount; d++ {
-		indexDispArray = append(indexDispArray, genRandom(indexArray))
-		indexArray = truncateArray(indexDispArray[d], indexArray)
-		i = indexDispArray[d] / gdkArraySize
-		j = indexDispArray[d] - i*gdkArraySize
-		gdkm.gdkMatrix[i][j].display = true
+	cueCount := gdkArraySize * difficulty / 100
+	gridIndex := 0
+	cueNumber := 0
+	for matrixIndex := 0; matrixIndex < gdkArraySize; matrixIndex++ {
+		indexArray = fillArray(gdkArraySize, true)
+		for cueIndex := 0; cueIndex <= cueCount; cueIndex++ {
+			cueNumber = genRandom(indexArray)
+			indexArray = truncateArray(cueNumber, indexArray)
+			gridIndex = cueNumber + (matrixIndex/3)*27 + (cueNumber/3)*6 + int(math.Mod(float64(matrixIndex), 3))*3
+			i = gridIndex / gdkArraySize
+			j = gridIndex - i*gdkArraySize
+			gdkm.gdkMatrix[i][j].display = true
+		}
 	}
 }
