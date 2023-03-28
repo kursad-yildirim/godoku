@@ -1,10 +1,15 @@
 package gdk
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+	"os"
+	"strconv"
+)
 
 func (gdkm *gdkMatrixType) FillGrid() (finished bool) {
 	finished = true
-	gdkm.Empty()
+	gdkm.initGDK()
 	cellValue := -1
 	for i, row := range gdkm.gdkMatrix {
 		for j := range row {
@@ -28,12 +33,24 @@ func (gdkm *gdkMatrixType) FillGrid() (finished bool) {
 	return
 }
 
-func (gdkm *gdkMatrixType) Empty() {
-	for i, row := range gdkm.gdkMatrix {
-		for j := range row {
-			gdkm.gdkMatrix[i][j].value = emptyValue
-			gdkm.gdkMatrix[i][j].display = false
+func (gdkm *gdkMatrixType) initGDK() {
+	gdkArraySize, _ = strconv.Atoi(os.Getenv("GODOKU_SIZE"))
+	difficulty, _ = strconv.Atoi(os.Getenv("GODOKU_DIFFICULTY"))
+	gridNumTotal = gdkArraySize * gdkArraySize
+	gdkDimension = int(math.Sqrt(float64(gdkArraySize)))
+	displayCount = gridNumTotal * difficulty / 100
+	emptyCell := gdkCellType{
+		value:   0,
+		display: false,
+	}
+	gdkm.gdkMatrix = gdkm.gdkMatrix[:0]
+	var emptyRow []gdkCellType
+	for i := 0; i < gdkArraySize; i++ {
+		for j := 0; j < gdkArraySize; j++ {
+			emptyRow = append(emptyRow, emptyCell)
 		}
+		gdkm.gdkMatrix = append(gdkm.gdkMatrix, emptyRow)
+		emptyRow = nil
 	}
 }
 
@@ -55,7 +72,7 @@ func (gdkm *gdkMatrixType) Print(masked bool) {
 }
 
 func (gdkm *gdkMatrixType) Mask() {
-	indexArray = fillArray(gdkNumCount, true)
+	indexArray = fillArray(gridNumTotal, true)
 	i, j := 0, 0
 	for d := 0; d < displayCount; d++ {
 		indexDispArray = append(indexDispArray, genRandom(indexArray))

@@ -1,15 +1,9 @@
 package gdk
 
-const gdkDimension = 3
-const gdkArraySize = 9
-const gdkNumCount = 81
-const displayCount = 35
-
+var gridNumTotal, gdkDimension, displayCount, difficulty, gdkArraySize int
 var valueArray []int
 var indexArray []int
 var indexDispArray []int
-
-var emptyValue int = 0
 
 type gdkCellType struct {
 	value   int
@@ -17,7 +11,7 @@ type gdkCellType struct {
 }
 
 type gdkMatrixType struct {
-	gdkMatrix [gdkArraySize][gdkArraySize]gdkCellType
+	gdkMatrix [][]gdkCellType
 }
 
 var Gdkm gdkMatrixType

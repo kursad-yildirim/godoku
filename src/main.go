@@ -5,9 +5,9 @@ import (
 )
 
 func main() {
-	gdk.Gdkm.Empty()
+	displayMasked := true
 	for !gdk.Gdkm.FillGrid() {
 	}
 	gdk.Gdkm.Mask()
-	gdk.Gdkm.Print(true)
+	gdk.Gdkm.Print(displayMasked)
 }
