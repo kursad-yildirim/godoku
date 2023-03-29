@@ -9,7 +9,8 @@ func GenerateGrid(w http.ResponseWriter, r *http.Request) {
 	displayMasked := true
 	for !Gdkm.FillGrid() {
 	}
-	Gdkm.Mask()
+	for !Gdkm.Mask() {
+	}
 	Gdkm.Print(displayMasked)
 	// Set the response header to JSON format
 	w.Header().Set("Content-Type", "application/json")

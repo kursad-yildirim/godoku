@@ -73,12 +73,19 @@ func (gdkm *gdkMatrixType) Print(masked bool) {
 	fmt.Print("\n\n")
 }
 
-func (gdkm *gdkMatrixType) Mask() {
+func (gdkm *gdkMatrixType) Mask() (finished bool) {
+	for i, row := range gdkm.gdkMatrix {
+		for j := range row {
+			gdkm.gdkMatrix[i][j].display = false
+		}
+	}
+	finished = false
 	i, j := 0, 0
 	cueCount := gdkArraySize * difficulty / 100
 	cue := 0
 	gridIndex := 0
 	cueNumber := 0
+	fmt.Print(">>> ")
 	for matrixIndex := 0; matrixIndex < gdkArraySize; matrixIndex++ {
 		indexArray = fillArray(gdkArraySize, true)
 		cueCount = rand.Intn(cueCount) + 2
@@ -91,8 +98,12 @@ func (gdkm *gdkMatrixType) Mask() {
 			gdkm.gdkMatrix[i][j].display = true
 			cue++
 			if cue == (gdkArraySize*gdkArraySize*difficulty/100 - 1) {
+				fmt.Println(cue)
+				finished = true
 				return
 			}
 		}
 	}
+
+	return
 }
