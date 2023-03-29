@@ -6,9 +6,11 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
+	"time"
 )
 
 func (gdkm *gdkMatrixType) FillGrid() (finished bool) {
+	rand.Seed(time.Now().UnixNano())
 	finished = true
 	gdkm.initGDK()
 	cellValue := -1
@@ -85,7 +87,6 @@ func (gdkm *gdkMatrixType) Mask() (finished bool) {
 	cue := 0
 	gridIndex := 0
 	cueNumber := 0
-	fmt.Print(">>> ")
 	for matrixIndex := 0; matrixIndex < gdkArraySize; matrixIndex++ {
 		indexArray = fillArray(gdkArraySize, true)
 		cueCount = rand.Intn(cueCount) + 2
@@ -98,7 +99,6 @@ func (gdkm *gdkMatrixType) Mask() (finished bool) {
 			gdkm.gdkMatrix[i][j].display = true
 			cue++
 			if cue == (gdkArraySize*gdkArraySize*difficulty/100 - 1) {
-				fmt.Println(cue)
 				finished = true
 				return
 			}
