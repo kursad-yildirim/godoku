@@ -1,13 +1,15 @@
 package main
 
 import (
+	"log"
+	"net/http"
+
 	"tripko.local/godoku/gdk"
 )
 
 func main() {
-	displayMasked := true
-	for !gdk.Gdkm.FillGrid() {
-	}
-	gdk.Gdkm.Mask()
-	gdk.Gdkm.Print(displayMasked)
+
+	http.HandleFunc("/generate", gdk.GenerateGrid)
+
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

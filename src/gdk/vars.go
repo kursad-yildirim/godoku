@@ -14,4 +14,10 @@ type gdkMatrixType struct {
 	gdkMatrix [][]gdkCellType
 }
 
+type httpSuccessType struct {
+	Difficulty int `json:"difficulty"`
+}
+
 var Gdkm gdkMatrixType
+
+var httpSuccess httpSuccessType

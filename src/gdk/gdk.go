@@ -3,6 +3,7 @@ package gdk
 import (
 	"fmt"
 	"math"
+	"math/rand"
 	"os"
 	"strconv"
 )
@@ -36,6 +37,7 @@ func (gdkm *gdkMatrixType) FillGrid() (finished bool) {
 func (gdkm *gdkMatrixType) initGDK() {
 	gdkArraySize, _ = strconv.Atoi(os.Getenv("GODOKU_SIZE"))
 	difficulty, _ = strconv.Atoi(os.Getenv("GODOKU_DIFFICULTY"))
+	httpSuccess.Difficulty = difficulty
 	gridNumTotal = gdkArraySize * gdkArraySize
 	gdkDimension = int(math.Sqrt(float64(gdkArraySize)))
 	displayCount = gridNumTotal * difficulty / 100
@@ -74,17 +76,23 @@ func (gdkm *gdkMatrixType) Print(masked bool) {
 func (gdkm *gdkMatrixType) Mask() {
 	i, j := 0, 0
 	cueCount := gdkArraySize * difficulty / 100
+	cue := 0
 	gridIndex := 0
 	cueNumber := 0
 	for matrixIndex := 0; matrixIndex < gdkArraySize; matrixIndex++ {
 		indexArray = fillArray(gdkArraySize, true)
-		for cueIndex := 0; cueIndex <= cueCount; cueIndex++ {
+		cueCount = rand.Intn(cueCount) + 2
+		for cueIndex := 0; cueIndex < cueCount; cueIndex++ {
 			cueNumber = genRandom(indexArray)
 			indexArray = truncateArray(cueNumber, indexArray)
 			gridIndex = cueNumber + (matrixIndex/3)*27 + (cueNumber/3)*6 + int(math.Mod(float64(matrixIndex), 3))*3
 			i = gridIndex / gdkArraySize
 			j = gridIndex - i*gdkArraySize
 			gdkm.gdkMatrix[i][j].display = true
+			cue++
+			if cue == (gdkArraySize*gdkArraySize*difficulty/100 - 1) {
+				return
+			}
 		}
 	}
 }
