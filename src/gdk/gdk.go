@@ -103,7 +103,10 @@ func (gdkm *gdkMatrixType) Mask() (finished bool) {
 				return
 			}
 		}
+		cueCount = gdkArraySize * difficulty / 100
 	}
 
 	return
 }
+
+// solveGRid function

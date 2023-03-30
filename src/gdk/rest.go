@@ -25,3 +25,5 @@ func GenerateGrid(w http.ResponseWriter, r *http.Request) {
 	// Write the JSON response
 	w.Write(jsonBytes)
 }
+
+// post request take difficulty send response
