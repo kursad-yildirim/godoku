@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    application: godoku
+    category: tuff-apps
+  name: tuff-godoku
+  namespace: tuff-apps
+data:
+  GODOKU_DIFFICULTY: "44"
+  GODOKU_SIZE: "9"
