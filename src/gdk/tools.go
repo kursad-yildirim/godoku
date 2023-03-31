@@ -10,24 +10,24 @@ func genRandom(values []int) (cellRandom int) {
 	return
 }
 
-func removeCurrentRowElements(i, j int, valueArray *[]int, gdkm *gdkMatrixType) {
+func removeCurrentRowElements(i, j int, valueArray *[]int, grid *godokuGrid) {
 	for subJ := 0; subJ < j; subJ++ {
-		*valueArray = truncateArray(gdkm.gdkMatrix[i][subJ].value, *valueArray)
+		*valueArray = truncateArray(grid.mainGrid[i][subJ].value, *valueArray)
 	}
 }
 
-func removeCurrentColumnElements(i, j int, valueArray *[]int, gdkm *gdkMatrixType) {
+func removeCurrentColumnElements(i, j int, valueArray *[]int, grid *godokuGrid) {
 	for subI := 0; subI < i; subI++ {
-		*valueArray = truncateArray(gdkm.gdkMatrix[subI][j].value, *valueArray)
+		*valueArray = truncateArray(grid.mainGrid[subI][j].value, *valueArray)
 	}
 }
 
-func removeSubMatrixElements(i, j int, valueArray *[]int, gdkm *gdkMatrixType) {
+func removeSubMatrixElements(i, j int, valueArray *[]int, grid *godokuGrid) {
 	matrixI := i / gdkDimension
 	matrixJ := j / gdkDimension
 	for i := 0; i < gdkDimension; i++ {
 		for j := 0; j < gdkDimension; j++ {
-			*valueArray = truncateArray(gdkm.gdkMatrix[matrixI*gdkDimension+i][matrixJ*gdkDimension+j].value, *valueArray)
+			*valueArray = truncateArray(grid.mainGrid[matrixI*gdkDimension+i][matrixJ*gdkDimension+j].value, *valueArray)
 		}
 	}
 }

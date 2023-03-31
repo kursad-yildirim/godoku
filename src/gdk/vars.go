@@ -3,21 +3,20 @@ package gdk
 var gridNumTotal, gdkDimension, displayCount, difficulty, gdkArraySize int
 var valueArray []int
 var indexArray []int
-var indexDispArray []int
 
-type gdkCellType struct {
-	value   int
-	display bool
+type cell struct {
+	value   int  `json:"value"`
+	display bool `json:"display"`
 }
 
-type gdkMatrixType struct {
-	gdkMatrix [][]gdkCellType
+type godokuGrid struct {
+	mainGrid [][]cell
 }
 
 type httpSuccessType struct {
 	Difficulty int `json:"difficulty"`
 }
 
-var Gdkm gdkMatrixType
+var GodokuGrid godokuGrid
 
 var httpSuccess httpSuccessType

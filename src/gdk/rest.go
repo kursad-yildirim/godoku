@@ -7,22 +7,19 @@ import (
 
 func GenerateGrid(w http.ResponseWriter, r *http.Request) {
 	displayMasked := true
-	for !Gdkm.FillGrid() {
+	for !GodokuGrid.FillGrid() {
 	}
-	for !Gdkm.Mask() {
+	for !GodokuGrid.Mask() {
 	}
-	Gdkm.Print(displayMasked)
-	// Set the response header to JSON format
+	GodokuGrid.Print(displayMasked)
 	w.Header().Set("Content-Type", "application/json")
 
-	// Convert the 'people' slice to JSON
 	jsonBytes, err := json.Marshal(httpSuccess)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Write the JSON response
 	w.Write(jsonBytes)
 }
 

@@ -9,64 +9,64 @@ import (
 	"time"
 )
 
-func (gdkm *gdkMatrixType) FillGrid() (finished bool) {
+func (grid *godokuGrid) FillGrid() (finished bool) {
 	rand.Seed(time.Now().UnixNano())
 	finished = true
-	gdkm.initGDK()
+	grid.initGDK()
 	cellValue := -1
-	for i, row := range gdkm.gdkMatrix {
+	for i, row := range grid.mainGrid {
 		for j := range row {
 			valueArray = fillArray(gdkArraySize, false)
 			if len(valueArray) == 1 {
 				cellValue = valueArray[0]
 			} else {
-				removeCurrentRowElements(i, j, &valueArray, gdkm)
-				removeCurrentColumnElements(i, j, &valueArray, gdkm)
-				removeSubMatrixElements(i, j, &valueArray, gdkm)
+				removeCurrentRowElements(i, j, &valueArray, grid)
+				removeCurrentColumnElements(i, j, &valueArray, grid)
+				removeSubMatrixElements(i, j, &valueArray, grid)
 				if len(valueArray) < 1 {
 					finished = false
 					return
 				}
 				cellValue = genRandom(valueArray)
 			}
-			gdkm.gdkMatrix[i][j].value = cellValue
+			grid.mainGrid[i][j].value = cellValue
 		}
 	}
 
 	return
 }
 
-func (gdkm *gdkMatrixType) initGDK() {
+func (grid *godokuGrid) initGDK() {
 	gdkArraySize, _ = strconv.Atoi(os.Getenv("GODOKU_SIZE"))
 	difficulty, _ = strconv.Atoi(os.Getenv("GODOKU_DIFFICULTY"))
 	httpSuccess.Difficulty = difficulty
 	gridNumTotal = gdkArraySize * gdkArraySize
 	gdkDimension = int(math.Sqrt(float64(gdkArraySize)))
 	displayCount = gridNumTotal * difficulty / 100
-	emptyCell := gdkCellType{
+	emptyCell := cell{
 		value:   0,
 		display: false,
 	}
-	gdkm.gdkMatrix = gdkm.gdkMatrix[:0]
-	var emptyRow []gdkCellType
+	grid.mainGrid = grid.mainGrid[:0]
+	var emptyRow []cell
 	for i := 0; i < gdkArraySize; i++ {
 		for j := 0; j < gdkArraySize; j++ {
 			emptyRow = append(emptyRow, emptyCell)
 		}
-		gdkm.gdkMatrix = append(gdkm.gdkMatrix, emptyRow)
+		grid.mainGrid = append(grid.mainGrid, emptyRow)
 		emptyRow = nil
 	}
 }
 
-func (gdkm *gdkMatrixType) Print(masked bool) {
-	for i, row := range gdkm.gdkMatrix {
+func (grid *godokuGrid) Print(masked bool) {
+	for i, row := range grid.mainGrid {
 		fmt.Println()
 		for j := range row {
 			fmt.Print(" ")
-			if masked && !gdkm.gdkMatrix[i][j].display {
+			if masked && !grid.mainGrid[i][j].display {
 				fmt.Print("_")
 			} else {
-				fmt.Print(gdkm.gdkMatrix[i][j].value)
+				fmt.Print(grid.mainGrid[i][j].value)
 			}
 			fmt.Print(" ")
 		}
@@ -75,10 +75,10 @@ func (gdkm *gdkMatrixType) Print(masked bool) {
 	fmt.Print("\n\n")
 }
 
-func (gdkm *gdkMatrixType) Mask() (finished bool) {
-	for i, row := range gdkm.gdkMatrix {
+func (grid *godokuGrid) Mask() (finished bool) {
+	for i, row := range grid.mainGrid {
 		for j := range row {
-			gdkm.gdkMatrix[i][j].display = false
+			grid.mainGrid[i][j].display = false
 		}
 	}
 	finished = false
@@ -96,7 +96,7 @@ func (gdkm *gdkMatrixType) Mask() (finished bool) {
 			gridIndex = cueNumber + (matrixIndex/3)*27 + (cueNumber/3)*6 + int(math.Mod(float64(matrixIndex), 3))*3
 			i = gridIndex / gdkArraySize
 			j = gridIndex - i*gdkArraySize
-			gdkm.gdkMatrix[i][j].display = true
+			grid.mainGrid[i][j].display = true
 			cue++
 			if cue == (gdkArraySize*gdkArraySize*difficulty/100 - 1) {
 				finished = true
