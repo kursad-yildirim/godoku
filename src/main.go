@@ -4,12 +4,13 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"tripko.local/godoku/gdk"
 )
 
 func main() {
+	router := mux.NewRouter()
+	router.HandleFunc("/", gdk.GenerateGrid).Methods("POST")
 
-	http.HandleFunc("/generate", gdk.GenerateGrid)
-
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", router))
 }

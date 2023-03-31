@@ -1,6 +1,7 @@
 package gdk
 
 import (
+	"fmt"
 	"math/rand"
 )
 
@@ -54,4 +55,17 @@ func fillArray(s int, isIndex bool) (valueArray []int) {
 	return
 }
 
-// grid in json
+func GenerateJSON(grid godokuGrid) [][]string {
+	jsonGrid := make([][]string, len(grid.mainGrid))
+	for i := range jsonGrid {
+		jsonGrid[i] = make([]string, len(grid.mainGrid[i]))
+		for j := range jsonGrid[i] {
+			if grid.mainGrid[i][j].display {
+				jsonGrid[i][j] = fmt.Sprint(grid.mainGrid[i][j].value)
+			} else {
+				jsonGrid[i][j] = "_"
+			}
+		}
+	}
+	return jsonGrid
+}

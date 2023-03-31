@@ -1,22 +1,23 @@
 package gdk
 
-var gridNumTotal, gdkDimension, displayCount, difficulty, gdkArraySize int
+var gdkDimension int
 var valueArray []int
 var indexArray []int
 
+type godokuProps struct {
+	Size       int `json:"size"`
+	Difficulty int `json:"difficulty"`
+	Population int
+}
+
 type cell struct {
-	value   int  `json:"value"`
-	display bool `json:"display"`
+	value   int
+	display bool
 }
 
 type godokuGrid struct {
 	mainGrid [][]cell
 }
 
-type httpSuccessType struct {
-	Difficulty int `json:"difficulty"`
-}
-
+var props godokuProps
 var GodokuGrid godokuGrid
-
-var httpSuccess httpSuccessType

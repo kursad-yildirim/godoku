@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
-	"os"
-	"strconv"
 	"time"
 )
 
@@ -16,7 +14,7 @@ func (grid *godokuGrid) FillGrid() (finished bool) {
 	cellValue := -1
 	for i, row := range grid.mainGrid {
 		for j := range row {
-			valueArray = fillArray(gdkArraySize, false)
+			valueArray = fillArray(props.Size, false)
 			if len(valueArray) == 1 {
 				cellValue = valueArray[0]
 			} else {
@@ -37,20 +35,15 @@ func (grid *godokuGrid) FillGrid() (finished bool) {
 }
 
 func (grid *godokuGrid) initGDK() {
-	gdkArraySize, _ = strconv.Atoi(os.Getenv("GODOKU_SIZE"))
-	difficulty, _ = strconv.Atoi(os.Getenv("GODOKU_DIFFICULTY"))
-	httpSuccess.Difficulty = difficulty
-	gridNumTotal = gdkArraySize * gdkArraySize
-	gdkDimension = int(math.Sqrt(float64(gdkArraySize)))
-	displayCount = gridNumTotal * difficulty / 100
+	gdkDimension = int(math.Sqrt(float64(props.Size)))
 	emptyCell := cell{
 		value:   0,
 		display: false,
 	}
 	grid.mainGrid = grid.mainGrid[:0]
 	var emptyRow []cell
-	for i := 0; i < gdkArraySize; i++ {
-		for j := 0; j < gdkArraySize; j++ {
+	for i := 0; i < props.Size; i++ {
+		for j := 0; j < props.Size; j++ {
 			emptyRow = append(emptyRow, emptyCell)
 		}
 		grid.mainGrid = append(grid.mainGrid, emptyRow)
@@ -83,27 +76,27 @@ func (grid *godokuGrid) Mask() (finished bool) {
 	}
 	finished = false
 	i, j := 0, 0
-	cueCount := gdkArraySize * difficulty / 100
+	cueCount := props.Size * props.Difficulty / 100
 	cue := 0
 	gridIndex := 0
 	cueNumber := 0
-	for matrixIndex := 0; matrixIndex < gdkArraySize; matrixIndex++ {
-		indexArray = fillArray(gdkArraySize, true)
+	for matrixIndex := 0; matrixIndex < props.Size; matrixIndex++ {
+		indexArray = fillArray(props.Size, true)
 		cueCount = rand.Intn(cueCount) + 2
 		for cueIndex := 0; cueIndex < cueCount; cueIndex++ {
 			cueNumber = genRandom(indexArray)
 			indexArray = truncateArray(cueNumber, indexArray)
 			gridIndex = cueNumber + (matrixIndex/3)*27 + (cueNumber/3)*6 + int(math.Mod(float64(matrixIndex), 3))*3
-			i = gridIndex / gdkArraySize
-			j = gridIndex - i*gdkArraySize
+			i = gridIndex / props.Size
+			j = gridIndex - i*props.Size
 			grid.mainGrid[i][j].display = true
 			cue++
-			if cue == (gdkArraySize*gdkArraySize*difficulty/100 - 1) {
+			if cue == (props.Population*props.Difficulty/100 - 1) {
 				finished = true
 				return
 			}
 		}
-		cueCount = gdkArraySize * difficulty / 100
+		cueCount = props.Size * props.Difficulty / 100
 	}
 
 	return

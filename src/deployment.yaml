@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: {application: godoku, category: tuff-apps, resiliency: multiple}
+  name: tuff-godoku
+  namespace: tuff-apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {application: godoku, category: tuff-apps, resiliency: multiple}
+  template:
+    metadata:
+      labels: {application: godoku, category: tuff-apps, resiliency: multiple}
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef: {name: tuff-mongodb-api}
+        image: image-registry.openshift-image-registry.svc:5000/tuff-apps/godoku:0.8
+        imagePullPolicy: IfNotPresent
+        name: tuff-godoku
+        ports:
+        - {containerPort: 8080, name: godoku-port}

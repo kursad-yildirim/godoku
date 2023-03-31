@@ -6,21 +6,17 @@ import (
 )
 
 func GenerateGrid(w http.ResponseWriter, r *http.Request) {
-	displayMasked := true
+
+	err := json.NewDecoder(r.Body).Decode(&props)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	props.Population = props.Size * props.Size
+
 	for !GodokuGrid.FillGrid() {
 	}
 	for !GodokuGrid.Mask() {
 	}
-	GodokuGrid.Print(displayMasked)
-	w.Header().Set("Content-Type", "application/json")
-
-	jsonBytes, err := json.Marshal(httpSuccess)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Write(jsonBytes)
+	json.NewEncoder(w).Encode(GenerateJSON(GodokuGrid))
 }
-
-// post request take difficulty send response
