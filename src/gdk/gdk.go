@@ -7,59 +7,60 @@ import (
 	"time"
 )
 
-func (grid *godokuGrid) FillGrid() (finished bool) {
+func (grid *gridType) FillGrid() (finished bool) {
 	rand.Seed(time.Now().UnixNano())
 	finished = true
-	grid.initGDK()
+	grid.initialize()
 	cellValue := -1
-	for i, row := range grid.mainGrid {
+	for i, row := range grid.members {
 		for j := range row {
-			valueArray = fillArray(props.Size, false)
+			valueArray = fillArray(props.GridSize, false)
 			if len(valueArray) == 1 {
 				cellValue = valueArray[0]
 			} else {
-				removeCurrentRowElements(i, j, &valueArray, grid)
-				removeCurrentColumnElements(i, j, &valueArray, grid)
-				removeSubMatrixElements(i, j, &valueArray, grid)
+				removeExistingRowElements(i, j, &valueArray, *grid)
+				removeExistingColumnElements(i, j, &valueArray, *grid)
+				removeExistingBlockElements(i, j, &valueArray, *grid)
 				if len(valueArray) < 1 {
 					finished = false
 					return
 				}
-				cellValue = genRandom(valueArray)
+				cellValue = generateRandomDigit(valueArray)
 			}
-			grid.mainGrid[i][j].value = cellValue
+			grid.members[i][j].value = cellValue
 		}
 	}
 
 	return
 }
 
-func (grid *godokuGrid) initGDK() {
-	gdkDimension = int(math.Sqrt(float64(props.Size)))
-	emptyCell := cell{
+func (grid *gridType) initialize() {
+	props.BlockSize = int(math.Sqrt(float64(props.GridSize)))
+	// make a custom error function here if props.BlockSize is not an integer
+	emptyCell := cellType{
 		value:   0,
 		display: false,
 	}
-	grid.mainGrid = grid.mainGrid[:0]
-	var emptyRow []cell
-	for i := 0; i < props.Size; i++ {
-		for j := 0; j < props.Size; j++ {
+	grid.members = grid.members[:0] // try grid.members = nil
+	var emptyRow []cellType
+	for i := 0; i < props.GridSize; i++ {
+		for j := 0; j < props.GridSize; j++ {
 			emptyRow = append(emptyRow, emptyCell)
 		}
-		grid.mainGrid = append(grid.mainGrid, emptyRow)
+		grid.members = append(grid.members, emptyRow)
 		emptyRow = nil
 	}
 }
 
-func (grid *godokuGrid) Print(masked bool) {
-	for i, row := range grid.mainGrid {
+func (grid *gridType) Print(masked bool) {
+	for i, row := range grid.members {
 		fmt.Println()
 		for j := range row {
 			fmt.Print(" ")
-			if masked && !grid.mainGrid[i][j].display {
+			if masked && !grid.members[i][j].display {
 				fmt.Print("_")
 			} else {
-				fmt.Print(grid.mainGrid[i][j].value)
+				fmt.Print(grid.members[i][j].value)
 			}
 			fmt.Print(" ")
 		}
@@ -68,35 +69,35 @@ func (grid *godokuGrid) Print(masked bool) {
 	fmt.Print("\n\n")
 }
 
-func (grid *godokuGrid) Mask() (finished bool) {
-	for i, row := range grid.mainGrid {
+func (grid *gridType) Mask() (finished bool) {
+	for i, row := range grid.members {
 		for j := range row {
-			grid.mainGrid[i][j].display = false
+			grid.members[i][j].display = false
 		}
 	}
 	finished = false
 	i, j := 0, 0
-	cueCount := props.Size * props.Difficulty / 100
-	cue := 0
+	givenCount := props.GridSize * props.Difficulty / 100
+	givenIndex := 0
 	gridIndex := 0
-	cueNumber := 0
-	for matrixIndex := 0; matrixIndex < props.Size; matrixIndex++ {
-		indexArray = fillArray(props.Size, true)
-		cueCount = rand.Intn(cueCount) + 2
-		for cueIndex := 0; cueIndex < cueCount; cueIndex++ {
-			cueNumber = genRandom(indexArray)
-			indexArray = truncateArray(cueNumber, indexArray)
-			gridIndex = cueNumber + (matrixIndex/3)*27 + (cueNumber/3)*6 + int(math.Mod(float64(matrixIndex), 3))*3
-			i = gridIndex / props.Size
-			j = gridIndex - i*props.Size
-			grid.mainGrid[i][j].display = true
-			cue++
-			if cue == (props.Population*props.Difficulty/100 - 1) {
+	given := 0
+	for blockIndex := 0; blockIndex < props.GridSize; blockIndex++ {
+		indexArray = fillArray(props.GridSize, true)
+		givenCount = rand.Intn(givenCount) + 2
+		for g := 0; g < givenCount; g++ {
+			given = generateRandomDigit(indexArray)
+			indexArray = truncateArray(given, indexArray)
+			gridIndex = given + (blockIndex / 3 ) * 27 + ( given / 3 ) * 6 + int(math.Mod(float64(blockIndex), 3 ) ) * 3
+			i = gridIndex / props.GridSize
+			j = gridIndex - i * props.GridSize
+			grid.members[i][j].display = true
+			givenIndex++
+			if givenIndex == (props.GridPopulation * props.Difficulty / 100 - 1) {
 				finished = true
 				return
 			}
 		}
-		cueCount = props.Size * props.Difficulty / 100
+		givenCount = props.GridSize * props.Difficulty / 100
 	}
 
 	return

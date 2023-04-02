@@ -5,30 +5,30 @@ import (
 	"math/rand"
 )
 
-func genRandom(values []int) (cellRandom int) {
-	cellRandom = values[rand.Intn(len(values))]
+func generateRandomDigit(values []int) (out int) {
+	out = values[rand.Intn(len(values))]
 
 	return
 }
 
-func removeCurrentRowElements(i, j int, valueArray *[]int, grid *godokuGrid) {
-	for subJ := 0; subJ < j; subJ++ {
-		*valueArray = truncateArray(grid.mainGrid[i][subJ].value, *valueArray)
+func removeExistingRowElements(cellRow, cellColumn int, valueArray *[]int, grid gridType) {
+	for j := 0; j < cellColumn; j++ {
+		*valueArray = truncateArray(grid.members[cellRow][j].value, *valueArray)
 	}
 }
 
-func removeCurrentColumnElements(i, j int, valueArray *[]int, grid *godokuGrid) {
-	for subI := 0; subI < i; subI++ {
-		*valueArray = truncateArray(grid.mainGrid[subI][j].value, *valueArray)
+func removeExistingColumnElements(cellRow, cellColumn int, valueArray *[]int, grid gridType) {
+	for i := 0; i < cellRow; i++ {
+		*valueArray = truncateArray(grid.members[i][cellColumn].value, *valueArray)
 	}
 }
 
-func removeSubMatrixElements(i, j int, valueArray *[]int, grid *godokuGrid) {
-	matrixI := i / gdkDimension
-	matrixJ := j / gdkDimension
-	for i := 0; i < gdkDimension; i++ {
-		for j := 0; j < gdkDimension; j++ {
-			*valueArray = truncateArray(grid.mainGrid[matrixI*gdkDimension+i][matrixJ*gdkDimension+j].value, *valueArray)
+func removeExistingBlockElements(cellRow, cellColumn int, valueArray *[]int, grid gridType) {
+	blockRow := cellRow / props.BlockSize
+	blockColumn := cellColumn / props.BlockSize
+	for i := 0; i < props.BlockSize; i++ {
+		for j := 0; j < props.BlockSize; j++ {
+			*valueArray = truncateArray(grid.members[blockRow * props.BlockSize + i][blockColumn * props.BlockSize + j].value, *valueArray)
 		}
 	}
 }
@@ -43,8 +43,8 @@ func truncateArray(takeOut int, valueArray []int) (truncatedValueArray []int) {
 	return
 }
 
-func fillArray(s int, isIndex bool) (valueArray []int) {
-	for i := 0; i < s; i++ {
+func fillArray(arraySize int, isIndex bool) (valueArray []int) {
+	for i := 0; i < arraySize; i++ {
 		if isIndex {
 			valueArray = append(valueArray, i)
 		} else {
@@ -55,13 +55,13 @@ func fillArray(s int, isIndex bool) (valueArray []int) {
 	return
 }
 
-func GenerateJSON(grid godokuGrid) [][]string {
-	jsonGrid := make([][]string, len(grid.mainGrid))
+func GenerateJSON(grid gridType) [][]string {
+	jsonGrid := make([][]string, props.GridSize)
 	for i := range jsonGrid {
-		jsonGrid[i] = make([]string, len(grid.mainGrid[i]))
+		jsonGrid[i] = make([]string, props.GridSize)
 		for j := range jsonGrid[i] {
-			if grid.mainGrid[i][j].display {
-				jsonGrid[i][j] = fmt.Sprint(grid.mainGrid[i][j].value)
+			if grid.members[i][j].display {
+				jsonGrid[i][j] = fmt.Sprint(grid.members[i][j].value)
 			} else {
 				jsonGrid[i][j] = "_"
 			}
