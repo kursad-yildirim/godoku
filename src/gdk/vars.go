@@ -27,6 +27,7 @@ type errorType struct {
 // can these be interfaces https://go.dev/tour/methods/9
 var Props propsType
 var grid gridType
+var validBlockSize = [2]int{2, 3}
 
 var envVars = map[string]map[string]string{
 	"blockSize": map[string]string{

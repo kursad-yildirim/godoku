@@ -8,8 +8,8 @@ import (
 )
 
 func ReadEnvironment() error {
-	var err error
-	var present bool
+	var err error = nil
+	var present bool = false
 	// define an interface for different data types and try to use a map instead of struct for props
 	/*
 		for _, myVar := range envVars {
@@ -23,6 +23,16 @@ func ReadEnvironment() error {
 	Props.BlockSize, err = strconv.Atoi(os.Getenv(envVars["blockSize"]["name"]))
 	if err != nil {
 		gdkError.errMsg = envVars["blockSize"]["name"] + errors["missingEnv"]
+		return &gdkError
+	}
+	// check a tour of go for a better way. there was an example with multiple return values. the counting example
+	for _, validSize := range validBlockSize {
+		if Props.BlockSize == validSize {
+			present = present || true
+		}
+	}
+	if !present {
+		gdkError.errMsg = "Unsupported block size! Please check documentation for valid values."
 		return &gdkError
 	}
 	Props.Difficulty, err = strconv.Atoi(os.Getenv(envVars["difficulty"]["name"]))
