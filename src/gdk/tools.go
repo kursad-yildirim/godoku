@@ -3,7 +3,28 @@ package gdk
 import (
 	"fmt"
 	"math/rand"
+	"os"
+	"strconv"
 )
+
+func ReadEnvironment() {
+	var err error
+	Props.BlockSize, err = strconv.Atoi(os.Getenv(envVars["blockSize"]))
+	if err != nil {
+		fmt.Println(envVars["blockSize"] + errors["missingEnv"])
+		return
+	}
+	Props.Difficulty, err = strconv.Atoi(os.Getenv(envVars["difficulty"]))
+	if err != nil {
+		fmt.Println(envVars["difficulty"] + errors["missingEnv"])
+		return
+	}
+	Props.PortNumber = os.Getenv(envVars["portNumber"])
+	/*	if err != nil {
+		fmt.Println(envVars["portNumber"] + errors["missingEnv"])
+		return
+	}*/
+}
 
 func generateRandomDigit(values []int) (out int) {
 	out = values[rand.Intn(len(values))]
@@ -24,11 +45,11 @@ func removeExistingColumnElements(cellRow, cellColumn int, valueArray *[]int, gr
 }
 
 func removeExistingBlockElements(cellRow, cellColumn int, valueArray *[]int, grid gridType) {
-	blockRow := cellRow / props.BlockSize
-	blockColumn := cellColumn / props.BlockSize
-	for i := 0; i < props.BlockSize; i++ {
-		for j := 0; j < props.BlockSize; j++ {
-			*valueArray = truncateArray(grid.members[blockRow * props.BlockSize + i][blockColumn * props.BlockSize + j].value, *valueArray)
+	blockRow := cellRow / Props.BlockSize
+	blockColumn := cellColumn / Props.BlockSize
+	for i := 0; i < Props.BlockSize; i++ {
+		for j := 0; j < Props.BlockSize; j++ {
+			*valueArray = truncateArray(grid.members[blockRow*Props.BlockSize+i][blockColumn*Props.BlockSize+j].value, *valueArray)
 		}
 	}
 }
@@ -56,9 +77,9 @@ func fillArray(arraySize int, isIndex bool) (valueArray []int) {
 }
 
 func GenerateJSON(grid gridType) [][]string {
-	jsonGrid := make([][]string, props.GridSize)
+	jsonGrid := make([][]string, Props.GridSize)
 	for i := range jsonGrid {
-		jsonGrid[i] = make([]string, props.GridSize)
+		jsonGrid[i] = make([]string, Props.GridSize)
 		for j := range jsonGrid[i] {
 			if grid.members[i][j].display {
 				jsonGrid[i][j] = fmt.Sprint(grid.members[i][j].value)

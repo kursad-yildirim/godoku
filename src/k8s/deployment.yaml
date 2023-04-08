@@ -25,7 +25,7 @@ spec:
       - envFrom:
         - configMapRef:
             name: tuff-godoku
-        image: image-registry.openshift-image-registry.svc:5000/tuff-apps/godoku:0.5.0
+        image: image-registry.openshift-image-registry.svc:5000/tuff-apps/godoku:0.18.0
         imagePullPolicy: IfNotPresent
         name: tuff-godoku
         ports:

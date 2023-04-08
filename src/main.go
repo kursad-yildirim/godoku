@@ -1,5 +1,5 @@
 package main
-// package main
+
 import (
 	"log"
 	"net/http"
@@ -9,8 +9,10 @@ import (
 )
 
 func main() {
+	gdk.ReadEnvironment()
+	// Define REST interface
 	router := mux.NewRouter()
 	router.HandleFunc("/", gdk.GenerateGrid).Methods("POST")
-
-	log.Fatal(http.ListenAndServe(":8080", router))
+	// Start Server
+	log.Fatal(http.ListenAndServe(":"+gdk.Props.PortNumber, router))
 }
