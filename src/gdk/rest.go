@@ -11,7 +11,6 @@ func GenerateGrid(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	Props.GridPopulation = Props.GridSize * Props.GridSize
 	grid.FillGrid()
 	grid.DigHoles()
 	json.NewEncoder(w).Encode(GenerateJSON(grid))

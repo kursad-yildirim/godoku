@@ -9,6 +9,8 @@ import (
 
 func (grid *gridType) initialize() {
 	Props.GridSize = Props.BlockSize * Props.BlockSize
+	Props.GridPopulation = Props.GridSize * Props.GridSize
+
 	emptyCell := cellType{
 		value:   0,
 		display: false,
@@ -97,14 +99,9 @@ func (grid *gridType) DigHoles() {
 }
 
 // RFE: solveGrid function
+// RFE: readiness and healthcheck probes
 // FIX: Validate props.blockSize
 // FIX: Error when port number is not found in the environment
 // FIX: BlockSize  > 3 is not working
 // QA: Perform load test and investigate index out of range errors
 // QA: Develop metrics to be extracted
-
-/*
-	When consecutive requests switch  from block size 3 to 2, the first request with size 2 always fails.
-	Sending another request with size 2 succeeds.
-	No problem when switching from 2  to 3
-*/
