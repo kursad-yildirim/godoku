@@ -7,23 +7,36 @@ import (
 	"strconv"
 )
 
-func ReadEnvironment() {
+func ReadEnvironment() error {
 	var err error
-	Props.BlockSize, err = strconv.Atoi(os.Getenv(envVars["blockSize"]))
+	var present bool
+	// define an interface for different data types and try to use a map instead of struct for props
+	/*
+		for _, myVar := range envVars {
+			if myVar["type"] == "int" {
+				fmt.Println(myVar["name"] + " is an integer")
+			} else if myVar["type"] == "string" {
+				fmt.Println(myVar["name"] + " is a string")
+			}
+		}
+	*/
+	Props.BlockSize, err = strconv.Atoi(os.Getenv(envVars["blockSize"]["name"]))
 	if err != nil {
-		fmt.Println(envVars["blockSize"] + errors["missingEnv"])
-		return
+		gdkError.errMsg = envVars["blockSize"]["name"] + errors["missingEnv"]
+		return &gdkError
 	}
-	Props.Difficulty, err = strconv.Atoi(os.Getenv(envVars["difficulty"]))
+	Props.Difficulty, err = strconv.Atoi(os.Getenv(envVars["difficulty"]["name"]))
 	if err != nil {
-		fmt.Println(envVars["difficulty"] + errors["missingEnv"])
-		return
+		gdkError.errMsg = envVars["difficulty"]["name"] + errors["missingEnv"]
+		return &gdkError
 	}
-	Props.PortNumber = os.Getenv(envVars["portNumber"])
-	/*	if err != nil {
-		fmt.Println(envVars["portNumber"] + errors["missingEnv"])
-		return
-	}*/
+	Props.PortNumber, present = os.LookupEnv(envVars["portNumber"]["name"])
+	if !present {
+		gdkError.errMsg = envVars["portNumber"]["name"] + errors["missingEnv"]
+		return &gdkError
+	}
+
+	return nil
 }
 
 func generateRandomDigit(values []int) (out int) {
@@ -89,4 +102,8 @@ func GenerateJSON(grid gridType) [][]string {
 		}
 	}
 	return jsonGrid
+}
+
+func (err *errorType) Error() string {
+	return fmt.Sprintf("ERROR: " + err.errMsg)
 }

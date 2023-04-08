@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -9,7 +10,10 @@ import (
 )
 
 func main() {
-	gdk.ReadEnvironment()
+	if err := gdk.ReadEnvironment(); err != nil {
+		fmt.Println(err)
+		return
+	}
 	// Define REST interface
 	router := mux.NewRouter()
 	router.HandleFunc("/", gdk.GenerateGrid).Methods("POST")
