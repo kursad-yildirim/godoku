@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	// godoku main
 	if err := gdk.ReadEnvironment(); err != nil {
 		fmt.Println(err)
 		return

@@ -1,6 +1,6 @@
 #! /bin/bash
 OLD_VERSION=$(cat k8s/deployment.yaml | grep image: | awk -F ":" '{print $4}')
-VERSION=0.27.0
+VERSION=0.29.0
 sed -i "s/$OLD_VERSION/$VERSION/g" ./k8s/deployment.yaml
 podman rmi default-route-openshift-image-registry.apps.tuff.tripko.local/tuff-apps/godoku:$OLD_VERSION
 podman build -t default-route-openshift-image-registry.apps.tuff.tripko.local/tuff-apps/godoku:$VERSION ./
